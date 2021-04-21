@@ -1,0 +1,3 @@
+/mnt/c/אור/גיבוי מטלה איש שלג/AP_Ex2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/mnt/c/אור/גיבוי מטלה איש שלג/AP_Ex2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/mnt/c/אור/גיבוי מטלה איש שלג/AP_Ex2/cmake-build-debug/CMakeFiles/AP_Ex2.dir

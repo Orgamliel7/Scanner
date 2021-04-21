@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/AP_Ex2.dir/main.cpp.o CMakeFiles/AP_Ex2.dir/scanner.cpp.o CMakeFiles/AP_Ex2.dir/token.cpp.o CMakeFiles/AP_Ex2.dir/symtab.cpp.o -o AP_Ex2 
