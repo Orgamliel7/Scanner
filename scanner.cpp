@@ -1,7 +1,27 @@
-#include "scanner.h"
 #include <regex>
+#include "scanner.h"
 
 using namespace std;
+#define SLASH '/'
+#define ASTERISK     '*'
+#define SEMICOLON    ';'
+#define AMPERSAND    '&'
+#define PLUS         '+'
+#define LEFTBRACKET    '{'
+#define RIGHTBRACKET    '}'
+#define COMMA    ','
+#define COLON    ':'
+#define LEFTCIRCLEBRACKET     '('
+#define RIGHTCIRCLEBRACKET     ')'
+#define LEFTSQUREBRACKET     '['
+#define RIGHTSQUREBRACKET    ']'
+#define TILDE    '~'
+#define PERCENT    '%'
+#define CIRCUMFLEX    '^'
+#define QUESTION    '?'
+#define EQUAL    '='
+#define LESSTHEN '<'
+#define LESSOREQUAL '<='
 
 shared_ptr<Token> Scanner::nextToken()
 {
@@ -22,8 +42,8 @@ shared_ptr<Token> Scanner::nextToken()
             }
         }
     }
-    char c2 = ch;
-    if (ch == '/' && nextChar() && ch == '/')
+    char charToScan = ch;
+    if (ch == SLASH && nextChar() && ch == SLASH)
     {
         nextChar();
         regex comment(".*|[\r]");
@@ -37,7 +57,7 @@ shared_ptr<Token> Scanner::nextToken()
     }
     else
         {
-        if (c2 == '/')
+        if (charToScan == SLASH)
         {
             inputFile.unget();
             inputFile.unget();
@@ -57,7 +77,7 @@ shared_ptr<Token> Scanner::nextToken()
         }
     }
 
-    while (ch == '/' && nextChar() && ch == '*')
+    while (ch == SLASH && nextChar() && ch == ASTERISK)
     {
         regex comment(".*|[\r\n]");
         if (regex_match(&ch, comment))
@@ -65,7 +85,7 @@ shared_ptr<Token> Scanner::nextToken()
             while (regex_match(&ch, comment))
             {
                 nextChar();
-                if (ch == '*' && nextChar() && ch == '/')
+                if (ch == ASTERISK && nextChar() && ch == SLASH)
                 {
                     nextChar();
                     break;
@@ -106,7 +126,7 @@ shared_ptr<Token> Scanner::nextToken()
     }
     else
         {
-        if(c2 == '.')
+        if(charToScan == '.')
         {
             inputFile.unget();
             inputFile.unget();
@@ -114,11 +134,11 @@ shared_ptr<Token> Scanner::nextToken()
         }
     }
 
-    if (ch == '<' && nextChar() && ch == '=')
+    if (ch == LESSTHEN && nextChar() && ch == EQUAL)
     {
-        return shared_ptr<Token>(new Token(LE_OP, "<="));
+        return shared_ptr<Token>(new Token(LE_OP, "LESSOREQUAL"));
     }else{
-        if(c2 == '<')
+        if(charToScan == '<')
         {
             inputFile.unget();
             inputFile.unget();
@@ -126,13 +146,13 @@ shared_ptr<Token> Scanner::nextToken()
         }
     }
 
-    if (ch == '=' && nextChar() && ch == '=')
+    if (ch == EQUAL && nextChar() && ch == EQUAL)
     {
         return shared_ptr<Token>(new Token(EQ_OP, "=="));
     }
     else
         {
-        if(c2 == '=')
+        if(charToScan == '=')
         {
             inputFile.unget();
             inputFile.unget();
@@ -140,14 +160,14 @@ shared_ptr<Token> Scanner::nextToken()
         }
     }
 
-    if (ch == '+' && nextChar() && ch == '+')
+    if (ch == PLUS && nextChar() && ch == PLUS)
     {
         return shared_ptr<Token>(new Token(INC_OP, "++"));
     }
     else
         {
 
-        if(c2 == '+')
+        if(charToScan == PLUS)
         {
             inputFile.unget();
             inputFile.unget();
@@ -156,26 +176,10 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-
-    switch (ch) { // each character represents itself
-        case ';' :
-        case '&' :
-        case '+' :
-        case '{' :
-        case '}' :
-        case ',' :
-        case ':' :
-        case '(' :
-        case ')' :
-        case '[' :
-        case ']' :
-        case '~' :
-        case '*' :
-        case '%' :
-        case '^' :
-        case '?' :
-        case '=':
-        case '/':
+    switch (ch)
+    {
+        // לכל תו ייצוג משלו ע"פ הdefine בראש התוכנית
+        case SEMICOLON : case AMPERSAND : case PLUS : case LEFTBRACKET : case RIGHTBRACKET : case COMMA : case COLON : case LEFTCIRCLEBRACKET : case RIGHTCIRCLEBRACKET : case LEFTSQUREBRACKET : case RIGHTSQUREBRACKET : case TILDE : case ASTERISK : case PERCENT : case CIRCUMFLEX :case QUESTION :case EQUAL: case SLASH:
             return shared_ptr<Token>
                     (new Token(static_cast<tokenType>(ch), string(1, ch)));
 
@@ -243,17 +247,17 @@ shared_ptr<Token> Scanner::nextToken()
     regex var("[\\w]");
     if (regex_match(&ch, var))
     {
-        string str = "";
+        string EmptyString = "";
         while (regex_match(&ch, var))
         {
-            str += ch;
+            EmptyString += ch;
             nextChar();
         }
         if (&ch != string(" "))
         {
             inputFile.unget();
         }
-        shared_ptr<Token> t = symTab.lookupToken(str);
+        shared_ptr<Token> t = symTab.lookupToken(EmptyString);
         if (t->getType() == IDENTIFIER)
         {
             t->add_line(lineno);
