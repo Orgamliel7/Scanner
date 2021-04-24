@@ -21,44 +21,97 @@ using namespace std;
 #define QUESTION    '?'
 #define EQUAL    '='
 #define LESSTHEN '<'
-#define LESSOREQUAL '<='
+#define BIGGERTHEN '>'
+#define MINUS '-'
+#define LESSOREQUAL "<="
+#define EQUALITYCHECK "=="
+#define PROMOTION "++"
+#define RIGHTARROW "->"
+
+
+
+string GetToken()
+{
+    string tryToScan = "_";
+    string token;
+    char ch;
+    cin.get(ch);
+    if (ch == ' ')
+    {
+        cin.get(ch);
+    }
+    if (ch == 'i' || ch == 'f')
+    {
+        string buffer;
+        while (!isspace(ch))
+        {
+            buffer += ch;
+            cin.get(ch);
+        }
+        token += buffer;
+    }
+    if (isdigit(ch))
+    {
+        string buffer;
+        while (ch != ';')
+        {
+            buffer += ch;
+            cin.get(ch);
+        }
+        token += buffer;
+        token += "\n;";
+    }
+    if (ch == 'A' || ch == 'B' || ch == 'C' || ch == 'D' || ch == 'E' || ch == '=')
+    {
+        token += ch;
+    }
+    return token;
+}
+
+
 
 shared_ptr<Token> Scanner::nextToken()
 {
 
+    string t = "string";
+   // GetToken()
+    //ניסיון ראשון לסריקה
+    static char choo = '\0';
+    if (isalpha(choo)) {
+        string text = "";
+        text += 1;
+        regex word_pattern(R"(\w(\w|\d)*)");
+        //בדיקת תקינות לטוקן
+        if (regex_match(text, word_pattern)) {
+            shared_ptr <Token> token = symTab.lookupToken(text);
+            // נבדוק אם בטבלת הסימבולים
+        }
+    }
 
-    if (!nextChar())
+
+    if (!nextChar())    // אם אין תו קדימה נחזיר פוינטר ריק
     {
         return nullptr;
     }
-    regex tab("[ \t\r\n]");
-    if (regex_match(&ch, tab))
-    {
-        while (regex_match(&ch, tab))
-        {
-            if (!nextChar())
-            {
+    regex badge("[ \t\r\n]"); // regex - ביטוי רגולרי
+    if (regex_match(&ch, badge)) {
+        while (regex_match(&ch, badge)) {
+            if (!nextChar()) {
                 break;
             }
         }
     }
     char charToScan = ch;
-    if (ch == SLASH && nextChar() && ch == SLASH)
-    {
+    if (ch == SLASH && nextChar() && ch == SLASH) {
         nextChar();
         regex comment(".*|[\r]");
-        if (regex_match(&ch, comment))
-        {
-            while (regex_match(&ch, comment))
-            {
+        if (regex_match(&ch, comment)) {
+            while (regex_match(&ch, comment)) {
                 nextChar();
             }
         }
-    }
-    else
-        {
-        if (charToScan == SLASH)
-        {
+    } else {
+        if (charToScan == SLASH) {
             inputFile.unget();
             inputFile.unget();
             nextChar();
@@ -66,37 +119,27 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    if (regex_match(&ch, tab))
-    {
-        while (regex_match(&ch, tab))
-        {
-            if (!nextChar())
-            {
+    if (regex_match(&ch, badge)) {
+        while (regex_match(&ch, badge)) {
+            if (!nextChar()) {
                 break;
             }
         }
     }
 
-    while (ch == SLASH && nextChar() && ch == ASTERISK)
-    {
+    while (ch == SLASH && nextChar() && ch == ASTERISK) {
         regex comment(".*|[\r\n]");
-        if (regex_match(&ch, comment))
-        {
-            while (regex_match(&ch, comment))
-            {
+        if (regex_match(&ch, comment)) {
+            while (regex_match(&ch, comment)) {
                 nextChar();
-                if (ch == ASTERISK && nextChar() && ch == SLASH)
-                {
+                if (ch == ASTERISK && nextChar() && ch == SLASH) {
                     nextChar();
                     break;
                 }
             }
-            if (regex_match(&ch, tab))
-            {
-                while (regex_match(&ch, tab))
-                {
-                    if (!nextChar())
-                    {
+            if (regex_match(&ch, badge)) {
+                while (regex_match(&ch, badge)) {
+                    if (!nextChar()) {
                         break;
                     }
                 }
@@ -105,70 +148,53 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    if (regex_match(&ch, tab))
-    {
-        while (regex_match(&ch, tab))
-        {
-            if (!nextChar())
-            {
+    if (regex_match(&ch, badge)) {
+        while (regex_match(&ch, badge)) {
+            if (!nextChar()) {
                 break;
             }
         }
     }
     regex digit("[\\d]");
-    if (ch == '.' && nextChar() && !regex_match(&ch, digit))
-    {
+    if (ch == '.' && nextChar() && !regex_match(&ch, digit)) {
         inputFile.unget();
         inputFile.unget();
         nextChar();
         return shared_ptr<Token>
                 (new Token(static_cast<tokenType>(ch), string(1, ch)));
-    }
-    else
-        {
-        if(charToScan == '.')
-        {
+    } else {
+        if (charToScan == '.') {
             inputFile.unget();
             inputFile.unget();
             nextChar();
         }
     }
 
-    if (ch == LESSTHEN && nextChar() && ch == EQUAL)
-    {
-        return shared_ptr<Token>(new Token(LE_OP, "LESSOREQUAL"));
-    }else{
-        if(charToScan == '<')
-        {
+    if (ch == LESSTHEN && nextChar() && ch == EQUAL) {
+        return shared_ptr<Token>(new Token(LE_OP, LESSOREQUAL));
+    } else {
+        if (charToScan == LESSTHEN) {
             inputFile.unget();
             inputFile.unget();
             nextChar();
         }
     }
 
-    if (ch == EQUAL && nextChar() && ch == EQUAL)
-    {
-        return shared_ptr<Token>(new Token(EQ_OP, "=="));
-    }
-    else
-        {
-        if(charToScan == '=')
-        {
+    if (ch == EQUAL && nextChar() && ch == EQUAL) {
+        return shared_ptr<Token>(new Token(EQ_OP, EQUALITYCHECK));
+    } else {
+        if (charToScan == EQUAL) {
             inputFile.unget();
             inputFile.unget();
             nextChar();
         }
     }
 
-    if (ch == PLUS && nextChar() && ch == PLUS)
-    {
-        return shared_ptr<Token>(new Token(INC_OP, "++"));
-    }
-    else
-        {
+    if (ch == PLUS && nextChar() && ch == PLUS) {
+        return shared_ptr<Token>(new Token(INC_OP, PROMOTION));
+    } else {
 
-        if(charToScan == PLUS)
-        {
+        if (charToScan == PLUS) {
             inputFile.unget();
             inputFile.unget();
             nextChar();
@@ -176,94 +202,98 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    switch (ch)
-    {
+    switch (ch) {
         // לכל תו ייצוג משלו ע"פ הdefine בראש התוכנית
-        case SEMICOLON : case AMPERSAND : case PLUS : case LEFTBRACKET : case RIGHTBRACKET : case COMMA : case COLON : case LEFTCIRCLEBRACKET : case RIGHTCIRCLEBRACKET : case LEFTSQUREBRACKET : case RIGHTSQUREBRACKET : case TILDE : case ASTERISK : case PERCENT : case CIRCUMFLEX :case QUESTION :case EQUAL: case SLASH:
+        case SEMICOLON :
+        case AMPERSAND :
+        case PLUS :
+        case LEFTBRACKET :
+        case RIGHTBRACKET :
+        case COMMA :
+        case COLON :
+        case LEFTCIRCLEBRACKET :
+        case RIGHTCIRCLEBRACKET :
+        case LEFTSQUREBRACKET :
+        case RIGHTSQUREBRACKET :
+        case TILDE :
+        case ASTERISK :
+        case PERCENT :
+        case CIRCUMFLEX :
+        case QUESTION :
+        case EQUAL:
+        case SLASH:
             return shared_ptr<Token>
                     (new Token(static_cast<tokenType>(ch), string(1, ch)));
 
 
     }
 
-    if (ch == '-' && nextChar() && ch == '>')
-    {
-        return shared_ptr<Token>(new Token(PTR_OP, "->"));
+    if (ch == MINUS && nextChar() && ch == BIGGERTHEN) {
+        return shared_ptr<Token>(new Token(PTR_OP, RIGHTARROW));
     }
 
-    regex d("([0-9]*\.|[0-9]*\.[0-9]+e?[0-9]+|[0-9]|)");
-    regex dig("[\\d.Ee]");
-    regex dig0("[\\d.]");
-    if (regex_match(&ch, dig0))
-    {
-        string str = "";
-        while (regex_match(&ch, dig))
-        {
-            str += ch;
+    regex reg1("([0-9]*\.|[0-9]*\.[0-9]+e?[0-9]+|[0-9]|)");
+    regex reg2("[\\d.Ee]");
+    regex reg3("[\\d.]");
+    if (regex_match(&ch, reg3)) {
+        string text = "";
+        while (regex_match(&ch, reg2)) {
+            text += ch;
             nextChar();
         }
-        if (&ch != string(" "))
-        {
+        if (&ch != string(" ")) {
             inputFile.unget();
         }
-        if (regex_match(str, d))
-        {
-            return shared_ptr<Token>(new Token(CONSTANT, str));
-        } else
-            {
-            return shared_ptr<Token>(new Token(ERROR, str));
-            }
+        if (regex_match(text, reg1)) {
+            return shared_ptr<Token>(new Token(CONSTANT, text));
+        } else {
+            return shared_ptr<Token>(new Token(ERROR, text));
+        }
 
 
     }
 
-    if (ch == '\'')
-    {
+    if (ch == '\'') {
         nextChar();
         string c3 = &ch;
         nextChar();
-        if (ch != '\'')
-        {
+        if (ch != '\'') {
             return nullptr;
         }
-        shared_ptr<Token> t(new Token(CONSTANT, c3));
+        shared_ptr <Token> t(new Token(CONSTANT, c3));
         return t;
     }
 
-    if (ch == '"')
-    {
+    if (ch == '"') {
         string str = "";
         nextChar();
         regex strin("[^\"]");
-        while (regex_match(&ch, strin))
-        {
+        while (regex_match(&ch, strin)) {
             str += ch;
             nextChar();
         }
-        shared_ptr<Token> t(new Token(STRING_LITERAL, str));
+        shared_ptr <Token> t(new Token(STRING_LITERAL, str));
         return t;
     }
 
     regex var("[\\w]");
-    if (regex_match(&ch, var))
-    {
+    if (regex_match(&ch, var)) {
         string EmptyString = "";
-        while (regex_match(&ch, var))
-        {
+        while (regex_match(&ch, var)) {
             EmptyString += ch;
             nextChar();
         }
-        if (&ch != string(" "))
-        {
+        if (&ch != string(" ")) {
             inputFile.unget();
         }
-        shared_ptr<Token> t = symTab.lookupToken(EmptyString);
-        if (t->getType() == IDENTIFIER)
-        {
+        shared_ptr <Token> t = symTab.lookupToken(EmptyString);
+        if (t->getType() == IDENTIFIER) {
             t->add_line(lineno);
         }
         return t;
     }
 
 
-}
+    }
+
+

@@ -1,5 +1,9 @@
 #include "symtab.h"
 
+
+
+
+
 void SymbolTable::initReserved()
 {
     string text;
@@ -20,38 +24,39 @@ void SymbolTable::initReserved()
     file.close();
 }
 
-shared_ptr<Token> SymbolTable::lookupToken(string text)
+shared_ptr<Token> SymbolTable::lookupToken(string parsing)
 {
-    auto it = symMap.find(text);
-    if (it == symMap.end())
+    auto iterator = symMap.find(parsing);
+    if (iterator == symMap.end())
     {
-        shared_ptr<Token> t(new varToken( text));
-        insertToken(text, t);
+        shared_ptr<Token> t(new varToken( parsing));
+        insertToken(parsing, t);
         return t;
     }
     else
         {
-        return it->second;
+        return iterator->second;
         }
 
 }
 
-void SymbolTable::insertToken(string text, shared_ptr<Token> tokenp)
+void SymbolTable::insertToken(string parsing, shared_ptr<Token> tokenp)
 {
-    symMap.insert({text, tokenp});
+    symMap.insert({parsing, tokenp});
 }
 
 void SymbolTable::xref()
 {
 
-    for (auto itr = symMap.begin(); itr != symMap.end(); ++itr)
+    for (auto itrator = symMap.begin(); itrator != symMap.end(); ++itrator)
     {
-        if(itr->second->getLines())
+        if(itrator->second->getLines())
         {
-            cout << '\t' << itr->first<<"\t";
-            for (auto it = itr->second->getLines()->begin(); it != itr->second->getLines()->end(); ++it)
+            cout << '\t' << itrator->first<<"\t";
+            for (auto iterator2 = itrator->second->getLines()->begin(); iterator2 != itrator->second->getLines()->end(); ++iterator2)
             {
-                cout << " " << *it;
+                string emp = " ";
+                cout << emp << *iterator2;
             }
             cout<<endl;
 
