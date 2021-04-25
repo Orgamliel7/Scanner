@@ -213,8 +213,11 @@ shared_ptr<Token> Scanner::nextToken()
         {
         if (charToScan == LESSTHEN)
         {
-            inputFile.unget();
-            inputFile.unget();
+            for (int i = 0; i < 2; ++i)
+            {
+                inputFile.unget();
+
+            }
             nextChar();
         }
     }
@@ -227,8 +230,11 @@ shared_ptr<Token> Scanner::nextToken()
         {
         if (charToScan == EQUAL)
         {
-            inputFile.unget();
-            inputFile.unget();
+            for (int i = 0; i < 2; ++i)
+            {
+                inputFile.unget();
+
+            }
             nextChar();
         }
     }
@@ -242,8 +248,11 @@ shared_ptr<Token> Scanner::nextToken()
 
         if (charToScan == PLUS)
         {
-            inputFile.unget();
-            inputFile.unget();
+            for (int i = 0; i < 2; ++i)
+            {
+                inputFile.unget();
+
+            }
             nextChar();
         }
     }
@@ -288,12 +297,16 @@ shared_ptr<Token> Scanner::nextToken()
         string text = "";
         while (regex_match(&ch, reg2))
         {
-            text += ch;
+            text = text + ch;
             nextChar();
         }
         if (&ch != string(" "))
         {
-            inputFile.unget();
+            for (int i = 0; i < 1; ++i)
+            {
+                inputFile.unget();
+
+            }
         }
         if (regex_match(text, reg1))
         {
