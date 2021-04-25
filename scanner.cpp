@@ -2,6 +2,7 @@
 #include "scanner.h"
 
 using namespace std;
+#define DOT '.'
 #define SLASH '/'
 #define ASTERISK     '*'
 #define SEMICOLON    ';'
@@ -74,15 +75,17 @@ shared_ptr<Token> Scanner::nextToken()
 {
 
     string t = "string";
-   // GetToken()
+    // GetToken()
     //ניסיון ראשון לסריקה
     static char choo = '\0';
-    if (isalpha(choo)) {
+    if (isalpha(choo))
+    {
         string text = "";
         text += 1;
         regex word_pattern(R"(\w(\w|\d)*)");
         //בדיקת תקינות לטוקן
-        if (regex_match(text, word_pattern)) {
+        if (regex_match(text, word_pattern))
+        {
             shared_ptr <Token> token = symTab.lookupToken(text);
             // נבדוק אם בטבלת הסימבולים
         }
@@ -94,24 +97,33 @@ shared_ptr<Token> Scanner::nextToken()
         return nullptr;
     }
     regex badge("[ \t\r\n]"); // regex - ביטוי רגולרי
-    if (regex_match(&ch, badge)) {
-        while (regex_match(&ch, badge)) {
-            if (!nextChar()) {
+    if (regex_match(&ch, badge))
+    {
+        while (regex_match(&ch, badge))
+        {
+            if (!nextChar())
+            {
                 break;
             }
         }
     }
     char charToScan = ch;
-    if (ch == SLASH && nextChar() && ch == SLASH) {
+    if (ch == SLASH && nextChar() && ch == SLASH)
+    {
         nextChar();
-        regex comment(".*|[\r]");
-        if (regex_match(&ch, comment)) {
-            while (regex_match(&ch, comment)) {
+        regex note(".*|[\r]");
+        if (regex_match(&ch, note))
+        {
+            while (regex_match(&ch, note))
+            {
                 nextChar();
             }
         }
-    } else {
-        if (charToScan == SLASH) {
+    }
+    else
+        {
+        if (charToScan == SLASH)
+        {
             inputFile.unget();
             inputFile.unget();
             nextChar();
@@ -119,27 +131,38 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    if (regex_match(&ch, badge)) {
-        while (regex_match(&ch, badge)) {
-            if (!nextChar()) {
+    if (regex_match(&ch, badge))
+    {
+        while (regex_match(&ch, badge))
+        {
+            if (!nextChar())
+            {
                 break;
             }
         }
     }
 
-    while (ch == SLASH && nextChar() && ch == ASTERISK) {
-        regex comment(".*|[\r\n]");
-        if (regex_match(&ch, comment)) {
-            while (regex_match(&ch, comment)) {
+    while (ch == SLASH && nextChar() && ch == ASTERISK)
+    {
+        regex note(".*|[\r\n]");
+        if (regex_match(&ch, note))
+        {
+            while (regex_match(&ch, note))
+            {
                 nextChar();
-                if (ch == ASTERISK && nextChar() && ch == SLASH) {
+                if (ch == ASTERISK && nextChar() && ch == SLASH)
+                {
                     nextChar();
                     break;
                 }
             }
-            if (regex_match(&ch, badge)) {
-                while (regex_match(&ch, badge)) {
-                    if (!nextChar()) {
+            if (regex_match(&ch, badge))
+            {
+                while (regex_match(&ch, badge))
+                {
+                    if (!nextChar())
+                    {
+
                         break;
                     }
                 }
@@ -148,53 +171,72 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    if (regex_match(&ch, badge)) {
-        while (regex_match(&ch, badge)) {
-            if (!nextChar()) {
+    if (regex_match(&ch, badge))
+    {
+        while (regex_match(&ch, badge))
+        {
+            if (!nextChar())
+            {
                 break;
             }
         }
     }
     regex digit("[\\d]");
-    if (ch == '.' && nextChar() && !regex_match(&ch, digit)) {
+    if (ch == DOT && nextChar() && !regex_match(&ch, digit))
+    {
         inputFile.unget();
         inputFile.unget();
         nextChar();
         return shared_ptr<Token>
                 (new Token(static_cast<tokenType>(ch), string(1, ch)));
-    } else {
-        if (charToScan == '.') {
+    }
+    else
+        {
+        if (charToScan == DOT)
+        {
             inputFile.unget();
             inputFile.unget();
             nextChar();
         }
     }
 
-    if (ch == LESSTHEN && nextChar() && ch == EQUAL) {
+    if (ch == LESSTHEN && nextChar() && ch == EQUAL)
+    {
         return shared_ptr<Token>(new Token(LE_OP, LESSOREQUAL));
-    } else {
-        if (charToScan == LESSTHEN) {
+    }
+    else
+        {
+        if (charToScan == LESSTHEN)
+        {
             inputFile.unget();
             inputFile.unget();
             nextChar();
         }
     }
 
-    if (ch == EQUAL && nextChar() && ch == EQUAL) {
+    if (ch == EQUAL && nextChar() && ch == EQUAL)
+    {
         return shared_ptr<Token>(new Token(EQ_OP, EQUALITYCHECK));
-    } else {
-        if (charToScan == EQUAL) {
+    }
+    else
+        {
+        if (charToScan == EQUAL)
+        {
             inputFile.unget();
             inputFile.unget();
             nextChar();
         }
     }
 
-    if (ch == PLUS && nextChar() && ch == PLUS) {
+    if (ch == PLUS && nextChar() && ch == PLUS)
+    {
         return shared_ptr<Token>(new Token(INC_OP, PROMOTION));
-    } else {
+    }
+    else
+        {
 
-        if (charToScan == PLUS) {
+        if (charToScan == PLUS)
+        {
             inputFile.unget();
             inputFile.unget();
             nextChar();
@@ -202,7 +244,8 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    switch (ch) {
+    switch (ch)
+    {
         // לכל תו ייצוג משלו ע"פ הdefine בראש התוכנית
         case SEMICOLON :
         case AMPERSAND :
@@ -231,33 +274,41 @@ shared_ptr<Token> Scanner::nextToken()
     if (ch == MINUS && nextChar() && ch == BIGGERTHEN) {
         return shared_ptr<Token>(new Token(PTR_OP, RIGHTARROW));
     }
-
+    regex reg0("([0-9]*\.|[0-9]*\.[0-9]+e?[0-9]+|[0-9]|)");
     regex reg1("([0-9]*\.|[0-9]*\.[0-9]+e?[0-9]+|[0-9]|)");
     regex reg2("[\\d.Ee]");
     regex reg3("[\\d.]");
-    if (regex_match(&ch, reg3)) {
+    if (regex_match(&ch, reg3))
+    {
         string text = "";
-        while (regex_match(&ch, reg2)) {
+        while (regex_match(&ch, reg2))
+        {
             text += ch;
             nextChar();
         }
-        if (&ch != string(" ")) {
+        if (&ch != string(" "))
+        {
             inputFile.unget();
         }
-        if (regex_match(text, reg1)) {
+        if (regex_match(text, reg1))
+        {
             return shared_ptr<Token>(new Token(CONSTANT, text));
-        } else {
+        }
+        else
+            {
             return shared_ptr<Token>(new Token(ERROR, text));
         }
 
 
     }
 
-    if (ch == '\'') {
+    if (ch == '\'')
+    {
         nextChar();
         string c3 = &ch;
         nextChar();
-        if (ch != '\'') {
+        if (ch != '\'')
+        {
             return nullptr;
         }
         shared_ptr <Token> t(new Token(CONSTANT, c3));
@@ -294,6 +345,4 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    }
-
-
+}
