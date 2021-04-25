@@ -28,7 +28,8 @@ using namespace std;
 #define EQUALITYCHECK "=="
 #define PROMOTION "++"
 #define RIGHTARROW "->"
-
+#define ONE 1
+#define EMPTYSTRING ""
 
 
 string GetToken()
@@ -78,10 +79,11 @@ shared_ptr<Token> Scanner::nextToken()
     // GetToken()
     //ניסיון ראשון לסריקה
     static char choo = '\0';
+    // Checks whether c is an alphabetic letter
     if (isalpha(choo))
     {
-        string text = "";
-        text += 1;
+        string text = EMPTYSTRING;
+        text += ONE;
         regex word_pattern(R"(\w(\w|\d)*)");
         //בדיקת תקינות לטוקן
         if (regex_match(text, word_pattern))
@@ -190,7 +192,7 @@ shared_ptr<Token> Scanner::nextToken()
         inputFile.unget();
         nextChar();
         return shared_ptr<Token>
-                (new Token(static_cast<tokenType>(ch), string(1, ch)));
+                (new Token(static_cast<tokenType>(ch), string(ONE, ch)));
     }
     else
         {
@@ -238,9 +240,10 @@ shared_ptr<Token> Scanner::nextToken()
             nextChar();
         }
     }
-
+    int check = 0;
     if (ch == PLUS && nextChar() && ch == PLUS)
     {
+         check++;
         return shared_ptr<Token>(new Token(INC_OP, PROMOTION));
     }
     else
@@ -248,6 +251,7 @@ shared_ptr<Token> Scanner::nextToken()
 
         if (charToScan == PLUS)
         {
+            check++;
             for (int i = 0; i < 2; ++i)
             {
                 inputFile.unget();
@@ -280,7 +284,7 @@ shared_ptr<Token> Scanner::nextToken()
         case EQUAL:
         case SLASH:
             return shared_ptr<Token>
-                    (new Token(static_cast<tokenType>(ch), string(1, ch)));
+                    (new Token(static_cast<tokenType>(ch), string(ONE, ch)));
 
 
     }
@@ -294,7 +298,7 @@ shared_ptr<Token> Scanner::nextToken()
     regex reg3("[\\d.]");
     if (regex_match(&ch, reg3))
     {
-        string text = "";
+        string text = EMPTYSTRING;
         while (regex_match(&ch, reg2))
         {
             text = text + ch;
@@ -335,7 +339,7 @@ shared_ptr<Token> Scanner::nextToken()
 
     if (ch == '"')
     {
-        string str = "";
+        string str = EMPTYSTRING;
         nextChar();
         regex strin("[^\"]");
         while (regex_match(&ch, strin))
@@ -350,7 +354,7 @@ shared_ptr<Token> Scanner::nextToken()
     regex var("[\\w]");
     if (regex_match(&ch, var))
     {
-        string EmptyString = "";
+        string EmptyString = EMPTYSTRING;
         while (regex_match(&ch, var))
         {
             EmptyString += ch;
