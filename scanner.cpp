@@ -112,8 +112,10 @@ shared_ptr<Token> Scanner::nextToken()
     {
         nextChar();
         regex note(".*|[\r]");
-        if (regex_match(&ch, note))
+        string refToC =  &ch;
+        if (regex_match(refToC, note))
         {
+            string refToC1 =  &ch;
             while (regex_match(&ch, note))
             {
                 nextChar();
@@ -194,8 +196,11 @@ shared_ptr<Token> Scanner::nextToken()
         {
         if (charToScan == DOT)
         {
-            inputFile.unget();
-            inputFile.unget();
+            for (int i = 0; i < 2; ++i)
+            {
+                inputFile.unget();
+
+            }
             nextChar();
         }
     }
@@ -305,43 +310,49 @@ shared_ptr<Token> Scanner::nextToken()
     if (ch == '\'')
     {
         nextChar();
-        string c3 = &ch;
+        string tokenc = &ch;
         nextChar();
         if (ch != '\'')
         {
             return nullptr;
         }
-        shared_ptr <Token> t(new Token(CONSTANT, c3));
-        return t;
+        shared_ptr <Token> OurToken(new Token(CONSTANT, tokenc));
+        return OurToken;
     }
 
-    if (ch == '"') {
+    if (ch == '"')
+    {
         string str = "";
         nextChar();
         regex strin("[^\"]");
-        while (regex_match(&ch, strin)) {
+        while (regex_match(&ch, strin))
+        {
             str += ch;
             nextChar();
         }
-        shared_ptr <Token> t(new Token(STRING_LITERAL, str));
-        return t;
+        shared_ptr <Token> OurToken(new Token(STRING_LITERAL, str));
+        return OurToken;
     }
 
     regex var("[\\w]");
-    if (regex_match(&ch, var)) {
+    if (regex_match(&ch, var))
+    {
         string EmptyString = "";
-        while (regex_match(&ch, var)) {
+        while (regex_match(&ch, var))
+        {
             EmptyString += ch;
             nextChar();
         }
-        if (&ch != string(" ")) {
+        if (&ch != string(" "))
+        {
             inputFile.unget();
         }
-        shared_ptr <Token> t = symTab.lookupToken(EmptyString);
-        if (t->getType() == IDENTIFIER) {
-            t->add_line(lineno);
+        shared_ptr <Token> OurToken = symTab.lookupToken(EmptyString);
+        if (OurToken->getType() == IDENTIFIER)
+        {
+            OurToken->add_line(lineno);
         }
-        return t;
+        return OurToken;
     }
 
 
