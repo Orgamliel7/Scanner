@@ -2,6 +2,7 @@
 #include "scanner.h"
 
 using namespace std;
+#define ZITUT '"'
 #define DOT '.'
 #define SLASH '/'
 #define ASTERISK     '*'
@@ -337,7 +338,7 @@ shared_ptr<Token> Scanner::nextToken()
         return OurToken;
     }
 
-    if (ch == '"')
+    if (ch == ZITUT)
     {
         string str = EMPTYSTRING;
         nextChar();
@@ -355,6 +356,7 @@ shared_ptr<Token> Scanner::nextToken()
     if (regex_match(&ch, var))
     {
         string EmptyString = EMPTYSTRING;
+
         while (regex_match(&ch, var))
         {
             EmptyString += ch;
@@ -362,7 +364,17 @@ shared_ptr<Token> Scanner::nextToken()
         }
         if (&ch != string(" "))
         {
-            inputFile.unget();
+            int checkCh = 0;
+            for (int i = 0; i < ch; ++i)
+            {
+               checkCh++;
+
+            }
+            for (int i = 0; i < 1; ++i)
+            {
+                inputFile.unget();
+
+            }
         }
         shared_ptr <Token> OurToken = symTab.lookupToken(EmptyString);
         if (OurToken->getType() == IDENTIFIER)
