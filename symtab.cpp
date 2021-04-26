@@ -17,8 +17,8 @@ void SymbolTable::initReserved()
             file >> text;
             file >> value;
             tokenType value2 = static_cast<tokenType>(stoi(value));
-            shared_ptr<Token> t(new Token(value2, text));
-            symMap.insert({text, t});
+            shared_ptr<Token> myToken(new Token(value2, text));
+            symMap.insert({text, myToken});
         }
     }
     file.close();
@@ -29,9 +29,9 @@ shared_ptr<Token> SymbolTable::lookupToken(string parsing)
     auto iterator = symMap.find(parsing);
     if (iterator == symMap.end())
     {
-        shared_ptr<Token> t(new varToken( parsing));
-        insertToken(parsing, t);
-        return t;
+        shared_ptr<Token> myToken(new varToken( parsing));
+        insertToken(parsing, myToken);
+        return myToken;
     }
     else
         {

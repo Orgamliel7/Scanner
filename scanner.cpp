@@ -1,5 +1,12 @@
 #include <regex>
 #include "scanner.h"
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 
 using namespace std;
 #define ZITUT '"'
@@ -31,6 +38,9 @@ using namespace std;
 #define RIGHTARROW "->"
 #define ONE 1
 #define EMPTYSTRING ""
+#define SPACESTRING " "
+#define BACKSLASHCHAR '\''
+
 
 
 string GetToken()
@@ -135,6 +145,20 @@ shared_ptr<Token> Scanner::nextToken()
         }
     }
 
+    STRING_LITERAL;
+    int term;
+    if (term== 0)
+    {
+        long long tempToken = 987654321;
+        tempToken = tempToken;
+    }
+    else
+    {
+        term =1;
+    }
+
+    SymbolTable relation = SymbolTable();
+    string Scanner = "";
 
     if (regex_match(&ch, badge))
     {
@@ -302,7 +326,8 @@ shared_ptr<Token> Scanner::nextToken()
 
     }
 
-    if (ch == MINUS && nextChar() && ch == BIGGERTHEN) {
+    if (ch == MINUS && nextChar() && ch == BIGGERTHEN)
+    {
         return shared_ptr<Token>(new Token(PTR_OP, RIGHTARROW));
     }
     regex reg0("([0-9]*\.|[0-9]*\.[0-9]+e?[0-9]+|[0-9]|)");
@@ -317,7 +342,7 @@ shared_ptr<Token> Scanner::nextToken()
             text = text + ch;
             nextChar();
         }
-        if (&ch != string(" "))
+        if (&ch != string(SPACESTRING))
         {
             for (int i = 0; i < 1; ++i)
             {
@@ -337,12 +362,12 @@ shared_ptr<Token> Scanner::nextToken()
 
     }
 
-    if (ch == '\'')
+    if (ch == BACKSLASHCHAR)
     {
         nextChar();
         string tokenc = &ch;
         nextChar();
-        if (ch != '\'')
+        if (ch != BACKSLASHCHAR)
         {
             return nullptr;
         }
@@ -374,7 +399,7 @@ shared_ptr<Token> Scanner::nextToken()
             EmptyString += ch;
             nextChar();
         }
-        if (&ch != string(" "))
+        if (&ch != string(SPACESTRING))
         {
             int checkCh = 0;
             for (int i = 0; i < ch; ++i)
