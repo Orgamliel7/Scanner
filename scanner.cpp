@@ -241,6 +241,18 @@ shared_ptr<Token> Scanner::nextToken()
             nextChar();
         }
     }
+    char chCheck = '"';
+    if (chCheck == '"')
+    {
+        string st = string(1, chCheck);
+        regex reg5("\"[^\"]*\"");
+        for (int i = 0; i <chCheck ; ++i)
+        {
+            st += chCheck;
+            if (chCheck == '"') break;
+        }
+
+    }
     int check = 0;
     if (ch == PLUS && nextChar() && ch == PLUS)
     {
@@ -377,11 +389,11 @@ shared_ptr<Token> Scanner::nextToken()
             }
         }
         shared_ptr <Token> OurToken = symTab.lookupToken(EmptyString);
-        if (OurToken->getType() == IDENTIFIER)
+        if (OurToken->getType() == IDENTIFIER) // אם הטוקן שלנו זה המזהה מקובץ ההדר
         {
-            OurToken->add_line(lineno);
+            OurToken->add_line(lineno);  // נוסיף שורה
         }
-        return OurToken;
+        return OurToken; // ונחזיר את הטוקן
     }
 
 
