@@ -9,6 +9,7 @@
 
 
 using namespace std;
+#define UNGET  inputFile.unget();
 #define ZITUT '"'
 #define DOT '.'
 #define SLASH '/'
@@ -139,8 +140,10 @@ shared_ptr<Token> Scanner::nextToken()
         {
         if (charToScan == SLASH)
         {
-            inputFile.unget();
-            inputFile.unget();
+            for (int i = 0; i < 2; ++i)
+            {
+                UNGET
+            }
             nextChar();
         }
     }
@@ -213,8 +216,10 @@ shared_ptr<Token> Scanner::nextToken()
     regex digit("[\\d]");
     if (ch == DOT && nextChar() && !regex_match(&ch, digit))
     {
-        inputFile.unget();
-        inputFile.unget();
+        for (int i = 0; i < 2; ++i)
+        {
+            UNGET
+        }
         nextChar();
         return shared_ptr<Token>
                 (new Token(static_cast<tokenType>(ch), string(ONE, ch)));
@@ -225,8 +230,7 @@ shared_ptr<Token> Scanner::nextToken()
         {
             for (int i = 0; i < 2; ++i)
             {
-                inputFile.unget();
-
+                UNGET
             }
             nextChar();
         }
@@ -242,8 +246,7 @@ shared_ptr<Token> Scanner::nextToken()
         {
             for (int i = 0; i < 2; ++i)
             {
-                inputFile.unget();
-
+                UNGET
             }
             nextChar();
         }
@@ -259,8 +262,7 @@ shared_ptr<Token> Scanner::nextToken()
         {
             for (int i = 0; i < 2; ++i)
             {
-                inputFile.unget();
-
+                UNGET
             }
             nextChar();
         }
@@ -291,8 +293,7 @@ shared_ptr<Token> Scanner::nextToken()
             check++;
             for (int i = 0; i < 2; ++i)
             {
-                inputFile.unget();
-
+                UNGET
             }
             nextChar();
         }
@@ -346,8 +347,7 @@ shared_ptr<Token> Scanner::nextToken()
         {
             for (int i = 0; i < 1; ++i)
             {
-                inputFile.unget();
-
+                UNGET
             }
         }
         if (regex_match(text, reg1))
@@ -409,8 +409,7 @@ shared_ptr<Token> Scanner::nextToken()
             }
             for (int i = 0; i < 1; ++i)
             {
-                inputFile.unget();
-
+                UNGET
             }
         }
         shared_ptr <Token> OurToken = symTab.lookupToken(EmptyString);
