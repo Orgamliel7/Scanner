@@ -9,6 +9,7 @@
 
 
 using namespace std;
+#define SKIPCHAR  nextChar();
 #define UNGET  inputFile.unget();
 #define ZITUT '"'
 #define DOT '.'
@@ -124,7 +125,7 @@ shared_ptr<Token> Scanner::nextToken()
     char charToScan = ch;
     if (ch == SLASH && nextChar() && ch == SLASH)
     {
-        nextChar();
+        SKIPCHAR
         regex note(".*|[\r]");
         string refToC =  &ch;
         if (regex_match(refToC, note))
@@ -132,7 +133,7 @@ shared_ptr<Token> Scanner::nextToken()
             string refToC1 =  &ch;
             while (regex_match(&ch, note))
             {
-                nextChar();
+                SKIPCHAR
             }
         }
     }
@@ -144,7 +145,7 @@ shared_ptr<Token> Scanner::nextToken()
             {
                 UNGET
             }
-            nextChar();
+            SKIPCHAR
         }
     }
 
@@ -181,10 +182,10 @@ shared_ptr<Token> Scanner::nextToken()
         {
             while (regex_match(&ch, note))
             {
-                nextChar();
+                SKIPCHAR
                 if (ch == ASTERISK && nextChar() && ch == SLASH)
                 {
-                    nextChar();
+                    SKIPCHAR
                     break;
                 }
             }
@@ -220,7 +221,7 @@ shared_ptr<Token> Scanner::nextToken()
         {
             UNGET
         }
-        nextChar();
+        SKIPCHAR
         return shared_ptr<Token>
                 (new Token(static_cast<tokenType>(ch), string(ONE, ch)));
     }
@@ -232,7 +233,7 @@ shared_ptr<Token> Scanner::nextToken()
             {
                 UNGET
             }
-            nextChar();
+            SKIPCHAR
         }
     }
 
@@ -248,7 +249,7 @@ shared_ptr<Token> Scanner::nextToken()
             {
                 UNGET
             }
-            nextChar();
+            SKIPCHAR
         }
     }
 
@@ -264,7 +265,7 @@ shared_ptr<Token> Scanner::nextToken()
             {
                 UNGET
             }
-            nextChar();
+            SKIPCHAR
         }
     }
     char chCheck = '"';
@@ -295,7 +296,7 @@ shared_ptr<Token> Scanner::nextToken()
             {
                 UNGET
             }
-            nextChar();
+            SKIPCHAR
         }
     }
 
@@ -341,7 +342,7 @@ shared_ptr<Token> Scanner::nextToken()
         while (regex_match(&ch, reg2))
         {
             text = text + ch;
-            nextChar();
+            SKIPCHAR
         }
         if (&ch != string(SPACESTRING))
         {
@@ -364,9 +365,9 @@ shared_ptr<Token> Scanner::nextToken()
 
     if (ch == BACKSLASHCHAR)
     {
-        nextChar();
+        SKIPCHAR
         string tokenc = &ch;
-        nextChar();
+        SKIPCHAR
         if (ch != BACKSLASHCHAR)
         {
             return nullptr;
@@ -378,12 +379,12 @@ shared_ptr<Token> Scanner::nextToken()
     if (ch == ZITUT)
     {
         string str = EMPTYSTRING;
-        nextChar();
+        SKIPCHAR
         regex strin("[^\"]");
         while (regex_match(&ch, strin))
         {
             str += ch;
-            nextChar();
+            SKIPCHAR
         }
         shared_ptr <Token> OurToken(new Token(STRING_LITERAL, str));
         return OurToken;
@@ -397,7 +398,7 @@ shared_ptr<Token> Scanner::nextToken()
         while (regex_match(&ch, var))
         {
             EmptyString += ch;
-            nextChar();
+            SKIPCHAR
         }
         if (&ch != string(SPACESTRING))
         {
