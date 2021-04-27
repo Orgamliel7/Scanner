@@ -1,3 +1,4 @@
+
 #include <regex>
 #include "scanner.h"
 #include <iostream>
@@ -9,28 +10,28 @@
 
 
 using namespace std;
-#define SKIPCHAR  nextChar();
-#define UNGET  inputFile.unget();
+#define SKIPCHAR nextChar();
+#define UNGET inputFile.unget();
 #define ZITUT '"'
 #define DOT '.'
 #define SLASH '/'
-#define ASTERISK     '*'
-#define SEMICOLON    ';'
-#define AMPERSAND    '&'
-#define PLUS         '+'
-#define LEFTBRACKET    '{'
-#define RIGHTBRACKET    '}'
-#define COMMA    ','
-#define COLON    ':'
-#define LEFTCIRCLEBRACKET     '('
-#define RIGHTCIRCLEBRACKET     ')'
-#define LEFTSQUREBRACKET     '['
-#define RIGHTSQUREBRACKET    ']'
-#define TILDE    '~'
-#define PERCENT    '%'
-#define CIRCUMFLEX    '^'
-#define QUESTION    '?'
-#define EQUAL    '='
+#define ASTERISK '*'
+#define SEMICOLON ';'
+#define AMPERSAND '&'
+#define PLUS '+'
+#define LEFTBRACKET '{'
+#define RIGHTBRACKET '}'
+#define COMMA ','
+#define COLON ':'
+#define LEFTCIRCLEBRACKET '('
+#define RIGHTCIRCLEBRACKET ')'
+#define LEFTSQUREBRACKET '['
+#define RIGHTSQUREBRACKET ']'
+#define TILDE '~'
+#define PERCENT '%'
+#define CIRCUMFLEX '^'
+#define QUESTION '?'
+#define EQUAL '='
 #define LESSTHEN '<'
 #define BIGGERTHEN '>'
 #define MINUS '-'
@@ -89,34 +90,34 @@ shared_ptr<Token> Scanner::nextToken()
 {
 
     string t = "string";
-    // GetToken()
-    //ניסיון ראשון לסריקה
+// GetToken()
+// ניסיון ראשון לסריקה
     static char choo = '\0';
-    // Checks whether c is an alphabetic letter
+// Checks whether c is an alphabetic letter
     if (isalpha(choo))
     {
         string text = EMPTYSTRING;
         text += ONE;
         regex word_pattern(R"(\w(\w|\d)*)");
-        //בדיקת תקינות לטוקן
+//בדיקת תקינות לטוקן
         if (regex_match(text, word_pattern))
         {
             shared_ptr <Token> token = symTab.lookupToken(text);
-            // נבדוק אם בטבלת הסימבולים
+// נבדוק אם בטבלת הסימבולים
         }
     }
 
 
-    if (!nextChar())    // אם אין תו קדימה נחזיר פוינטר ריק
+    if (!nextChar()) // אם אין תו קדימה נחזיר פוינטר ריק
     {
         return nullptr;
     }
-    regex badge("[ \t\r\n]"); // regex - ביטוי רגולרי
-    if (regex_match(&ch, badge))
+    // regex  - ביטוי רגולרי
+    if (regex_match(&ch, regex ("[ \n\t\r]")))
     {
-        while (regex_match(&ch, badge))
+        while (regex_match(&ch, regex ("[ \n\t\r]")))
         {
-            if (!nextChar())
+            if (nextChar()==false)
             {
                 break;
             }
@@ -127,10 +128,10 @@ shared_ptr<Token> Scanner::nextToken()
     {
         SKIPCHAR
         regex note(".*|[\r]");
-        string refToC =  &ch;
+        string refToC = &ch;
         if (regex_match(refToC, note))
         {
-            string refToC1 =  &ch;
+            string refToC1 = &ch;
             while (regex_match(&ch, note))
             {
                 SKIPCHAR
@@ -138,7 +139,7 @@ shared_ptr<Token> Scanner::nextToken()
         }
     }
     else
-        {
+    {
         if (charToScan == SLASH)
         {
             for (int i = 0; i < 2; ++i)
@@ -164,11 +165,11 @@ shared_ptr<Token> Scanner::nextToken()
     SymbolTable relation = SymbolTable();
     string Scanner = "";
 
-    if (regex_match(&ch, badge))
+    if (regex_match(&ch, regex ("[ \n\t\r]")))
     {
-        while (regex_match(&ch, badge))
+        while (regex_match(&ch, regex ("[ \n\t\r]")))
         {
-            if (!nextChar())
+            if (nextChar()==false)
             {
                 break;
             }
@@ -189,11 +190,11 @@ shared_ptr<Token> Scanner::nextToken()
                     break;
                 }
             }
-            if (regex_match(&ch, badge))
+            if (regex_match(&ch, regex ("[ \n\t\r]")))
             {
-                while (regex_match(&ch, badge))
+                while (regex_match(&ch, regex ("[ \n\t\r]")))
                 {
-                    if (!nextChar())
+                    if (nextChar()==false)
                     {
 
                         break;
@@ -204,9 +205,9 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    if (regex_match(&ch, badge))
+    if (regex_match(&ch, regex ("[ \n\t\r]")))
     {
-        while (regex_match(&ch, badge))
+        while (regex_match(&ch, regex ("[ \n\t\r]")))
         {
             if (!nextChar())
             {
@@ -226,7 +227,7 @@ shared_ptr<Token> Scanner::nextToken()
                 (new Token(static_cast<tokenType>(ch), string(ONE, ch)));
     }
     else
-        {
+    {
         if (charToScan == DOT)
         {
             for (int i = 0; i < 2; ++i)
@@ -242,7 +243,7 @@ shared_ptr<Token> Scanner::nextToken()
         return shared_ptr<Token>(new Token(LE_OP, LESSOREQUAL));
     }
     else
-        {
+    {
         if (charToScan == LESSTHEN)
         {
             for (int i = 0; i < 2; ++i)
@@ -258,7 +259,7 @@ shared_ptr<Token> Scanner::nextToken()
         return shared_ptr<Token>(new Token(EQ_OP, EQUALITYCHECK));
     }
     else
-        {
+    {
         if (charToScan == EQUAL)
         {
             for (int i = 0; i < 2; ++i)
@@ -283,11 +284,11 @@ shared_ptr<Token> Scanner::nextToken()
     int check = 0;
     if (ch == PLUS && nextChar() && ch == PLUS)
     {
-         check++;
+        check++;
         return shared_ptr<Token>(new Token(INC_OP, PROMOTION));
     }
     else
-        {
+    {
 
         if (charToScan == PLUS)
         {
@@ -303,7 +304,7 @@ shared_ptr<Token> Scanner::nextToken()
 
     switch (ch)
     {
-        // לכל תו ייצוג משלו ע"פ הdefine בראש התוכנית
+// לכל תו ייצוג משלו ע"פ הdefine בראש התוכנית
         case SEMICOLON :
         case AMPERSAND :
         case PLUS :
@@ -356,7 +357,7 @@ shared_ptr<Token> Scanner::nextToken()
             return shared_ptr<Token>(new Token(CONSTANT, text));
         }
         else
-            {
+        {
             return shared_ptr<Token>(new Token(ERROR, text));
         }
 
@@ -380,8 +381,7 @@ shared_ptr<Token> Scanner::nextToken()
     {
         string str = EMPTYSTRING;
         SKIPCHAR
-        regex strin("[^\"]");
-        while (regex_match(&ch, strin))
+        while (regex_match(&ch, regex ("[^\"]")))
         {
             str += ch;
             SKIPCHAR
@@ -390,12 +390,12 @@ shared_ptr<Token> Scanner::nextToken()
         return OurToken;
     }
 
-    regex var("[\\w]");
-    if (regex_match(&ch, var))
+
+    if (regex_match(&ch, regex ("[\\w]")))
     {
         string EmptyString = EMPTYSTRING;
 
-        while (regex_match(&ch, var))
+        while (regex_match(&ch, regex ("[\\w]")))
         {
             EmptyString += ch;
             SKIPCHAR
@@ -405,7 +405,7 @@ shared_ptr<Token> Scanner::nextToken()
             int checkCh = 0;
             for (int i = 0; i < ch; ++i)
             {
-               checkCh++;
+                checkCh++;
 
             }
             for (int i = 0; i < 1; ++i)
@@ -414,12 +414,13 @@ shared_ptr<Token> Scanner::nextToken()
             }
         }
         shared_ptr <Token> OurToken = symTab.lookupToken(EmptyString);
-        if (OurToken->getType() == IDENTIFIER) // אם הטוקן שלנו זה המזהה מקובץ ההדר
+        if (OurToken->getType() == IDENTIFIER) // אם הטוקן שלנו זה המזהה מקובץ ההדר ̈
         {
-            OurToken->add_line(lineno);  // נוסיף שורה
+            OurToken->add_line(lineno); // נוסיף שורה
         }
         return OurToken; // ונחזיר את הטוקן
     }
 
 
 }
+
