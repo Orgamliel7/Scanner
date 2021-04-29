@@ -1,4 +1,3 @@
-
 #include <regex>
 #include "scanner.h"
 #include <iostream>
@@ -7,9 +6,14 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
+#include <errno.h>
+#include<ctype.h>
 
 
 using namespace std;
+
+#define REGULAREXPRESSIONOPTIONS "[ \n\t\r]"
 #define SKIPCHAR nextChar();
 #define UNGET inputFile.unget();
 #define ZITUT '"'
@@ -83,7 +87,13 @@ string GetToken()
     }
     return token;
 }
-
+template <typename  T>
+T myMax(T x, T y)
+{
+    return (x > y)? x: y;
+    myMax<int>(3, 7);
+    myMax<double>(3.0, 7.0);
+}
 
 
 shared_ptr<Token> Scanner::nextToken()
@@ -113,9 +123,9 @@ shared_ptr<Token> Scanner::nextToken()
         return nullptr;
     }
     // regex  - ביטוי רגולרי
-    if (regex_match(&ch, regex ("[ \n\t\r]")))
+    if (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
     {
-        while (regex_match(&ch, regex ("[ \n\t\r]")))
+        while (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
         {
             if (nextChar()==false)
             {
@@ -123,6 +133,11 @@ shared_ptr<Token> Scanner::nextToken()
             }
         }
     }
+
+
+
+
+
     char charToScan = ch;
     if (ch == SLASH && nextChar() && ch == SLASH)
     {
@@ -165,9 +180,9 @@ shared_ptr<Token> Scanner::nextToken()
     SymbolTable relation = SymbolTable();
     string Scanner = "";
 
-    if (regex_match(&ch, regex ("[ \n\t\r]")))
+    if (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
     {
-        while (regex_match(&ch, regex ("[ \n\t\r]")))
+        while (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
         {
             if (nextChar()==false)
             {
@@ -190,9 +205,9 @@ shared_ptr<Token> Scanner::nextToken()
                     break;
                 }
             }
-            if (regex_match(&ch, regex ("[ \n\t\r]")))
+            if (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
             {
-                while (regex_match(&ch, regex ("[ \n\t\r]")))
+                while (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
                 {
                     if (nextChar()==false)
                     {
@@ -205,9 +220,9 @@ shared_ptr<Token> Scanner::nextToken()
     }
 
 
-    if (regex_match(&ch, regex ("[ \n\t\r]")))
+    if (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
     {
-        while (regex_match(&ch, regex ("[ \n\t\r]")))
+        while (regex_match(&ch, regex (REGULAREXPRESSIONOPTIONS)))
         {
             if (!nextChar())
             {
@@ -329,6 +344,10 @@ shared_ptr<Token> Scanner::nextToken()
 
     }
 
+
+
+
+
     if (ch == MINUS && nextChar() && ch == BIGGERTHEN)
     {
         return shared_ptr<Token>(new Token(PTR_OP, RIGHTARROW));
@@ -418,9 +437,16 @@ shared_ptr<Token> Scanner::nextToken()
         {
             OurToken->add_line(lineno); // נוסיף שורה
         }
+        myMax<int>(3, 7);
+        myMax<double>(3.0, 7.0);
+
         return OurToken; // ונחזיר את הטוקן
     }
 
 
 }
-
+template <typename  T>
+T myMin(T x, T y)
+{
+    return (x < y)? y: x;
+}
